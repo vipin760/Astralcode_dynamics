@@ -16,7 +16,8 @@ import {
   TASK_UPDATE_REQUEST,
   TASK_UPDATE_SUCCESS,
 } from "./task.constants";
-const USER_API = "http://localhost:3000/api/v2";
+// const USER_API = "http://localhost:3000/api/v2";
+const USER_API = "https://astralcode-dynamics.onrender.com/api/v2"
 
 const getToken = () => {
   const token = localStorage.getItem("token");
