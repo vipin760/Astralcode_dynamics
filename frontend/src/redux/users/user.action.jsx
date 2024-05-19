@@ -2,7 +2,8 @@ import { toast } from "react-toastify";
 import { USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS } from "./user.constants"
 import axios from 'axios'
 
-const USER_API ='http://localhost:3000/api/v2'
+// const USER_API ='http://localhost:3000/api/v2'
+const USER_API ='https://astralcode-dynamics.onrender.com/api/v2'
 export const userRegister =(formData)=>async(dispatch)=>{
     try {
         dispatch({ type:USER_REGISTER_REQUEST})
