@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { json } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { UserLogin } from '../../../redux/users/user.action'
 const USER_API = "http://localhost:3000/api/v2"
-const Login = () => {
 
+const Login = () => {
+    const dispatch = useDispatch();
     const[ FormData,setFormData]=useState({email:'',password:''})
     const [Errors,setErrors] =useState({})
     const [Show,setShow] = useState(true)
@@ -30,12 +32,10 @@ const Login = () => {
 
         setErrors(validationErrors)
         if(Object.keys(validationErrors).length===0){
-            await axios.post(`${USER_API}/user/login`,FormData).then((res)=>{
-                console.log(res)
-                localStorage.setItem('token',JSON.stringify(res.data.token));
-                toast.success(res.data.message)
-            }).catch((error)=>{
-                toast.error(error.response.data.message);
+            dispatch(UserLogin(FormData)).then(_d=>{
+                setTimeout(() => {
+                    window.location.href="/home"
+                }, 1000);
             })
         }
     }

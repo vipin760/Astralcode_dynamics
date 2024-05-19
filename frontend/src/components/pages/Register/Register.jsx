@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useDispatch,useSelector } from 'react-redux'
+import { userRegister } from '../../../redux/users/user.action'
 const USER_API = "http://localhost:3000/api/v2"
 
 const Register = () => {
+
+    const dispatch = useDispatch()
+
     const [FormData,setFormData] = useState({
         name:'',email:'',password:'',cpassword:''
     })
@@ -52,11 +57,8 @@ const Register = () => {
         }
         setErrors(validationErrors)
         if(Object.keys(validationErrors).length===0){
-            await axios.post(`${USER_API}/user/register`,FormData).then((res)=>{
-                toast.success(res.data.message)
-                window.location.href="/login"
-            }).catch((error)=>{
-                toast.error(error.response.data.message)
+            dispatch(userRegister(FormData)).then(_d=>{
+                 window.location.href="/login"
             })
         }
 
@@ -105,8 +107,7 @@ const Register = () => {
                       </div>
                    <div>
                    <div className="relative">
-                        <input type={Show?"password":"text"} name='cpassword' placeholder="confirm password" className="p-2 rounded-xl border w-full" onChange={handleChange} />
-                        <i className="fa-solid fa-eye absolute top-1/2 right-2 -translate-y-1/2" onClick={passwordShow}></i>
+                        <input type={false?"password":"text"} name='cpassword' placeholder="confirm password" className="p-2 rounded-xl border w-full" onChange={handleChange} />
                     </div>
                     {Errors.cpassword&&(
                         <p className='text-sm text-red-700'>&nbsp; * {Errors.cpassword}</p>

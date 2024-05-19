@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Error = () => {
+  console.log("error page working");
   return (
     <div className='min-h-screen flex items-center justify-center'>
       <div>

@@ -9,8 +9,10 @@ app.use(cors());
 
 ////////// routes///
 const user_routes = require('./routes/user.routes');
+const task_routes = require('./routes/task.routes');
 
 app.use('/api/v2',user_routes);
+app.use('/api/v2',task_routes);
 
 app.use(errorMiddleware);
 
