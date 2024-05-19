@@ -24,7 +24,6 @@ const getToken = () => {
   const config = {
     headers: {
       "Content-Type": "Application/json",
-      "Access-Control-Allow-Origin":"*",
       Authorization: `Bearer ${token}`,
     },
   };
