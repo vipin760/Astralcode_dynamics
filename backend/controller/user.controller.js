@@ -10,7 +10,7 @@ const generateToken = (userData)=>{
 }
 
 exports.getSampleData=catchAsyncErrors( async (req,res,next)=>{
-    res.status(200).send({message:"successfully accept data..."})
+    res.status(200).send({status:true,message:"successfully accept data..."})
 })
 
 exports.userRegister=catchAsyncErrors(async(req,res,next)=>{
@@ -21,7 +21,6 @@ exports.userRegister=catchAsyncErrors(async(req,res,next)=>{
     const passwordHash = await bcrypt.hash(req.body.password,parseInt(process.env.SALT));
     req.body.password = passwordHash
     await User.create(req.body).then((data)=>{
-        console.log(data);
         res.status(200).send({status:true,message:`hello ${data.name} ,your registration completed`});
     })
 })

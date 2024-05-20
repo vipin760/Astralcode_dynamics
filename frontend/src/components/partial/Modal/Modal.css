@@ -1,0 +1,6 @@
+/* HTML: <div class="loader"></div> */
+
+  .card{
+    background: #000;
+    z-index: -20;
+  }

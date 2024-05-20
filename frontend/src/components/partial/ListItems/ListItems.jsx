@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteTask, TaskGet } from "../../../redux/tasks/task.action";
 import Loading from "../Loading/Loading";
+import Modal from "../Modal/Modal";
 const ListItems = () => {
   const dispatch = useDispatch();
   const [Selected, setSelector] = useState("all");
   const [Count, setCount] = useState([]);
-  const [Page, setPage] = useState();
+  const [Page, setPage] = useState('1');
   const [keyword,setKeyword]=useState('')
   const TaskDetails = useSelector((state) => state.TaskDetails);
-  const { taskData, loading, error } = TaskDetails;
+  const {error, taskData, loading } = TaskDetails;
+  const [onModal,setOnModal]=useState(false)
+  const [data,setData]=useState({});
   useEffect(() => {
     setPage(1);
     dispatch(TaskGet("all", 1));
@@ -25,7 +28,9 @@ const ListItems = () => {
     }
   }, [taskData]);
 
+
   const handleSelect = (e) => {
+    
     if (e.target.id === "all") {
       dispatch(TaskGet("all", "1"));
       setPage("1");
@@ -46,10 +51,14 @@ const ListItems = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(DeleteTask(id)).then((res) => {
-      dispatch(TaskGet(Selected, Page));
-    });
-  };
+    const confirmDelete = window.confirm('Are you sure you want to delete this item?');
+    if(confirmDelete){
+      dispatch(DeleteTask(id)).then((res) => {
+        dispatch(TaskGet(Selected, Page));
+      });
+    };
+    }
+  
 
   const handleNext = (value) => {
     if (value === "next") {
@@ -79,9 +88,13 @@ const ListItems = () => {
   e.preventDefault()
       if(keyword){
         setSelector("all");
-        dispatch(TaskGet('all',1,keyword))
+       dispatch(TaskGet('all',1,keyword))
       }
   }
+ const handlePopup=(data)=>{
+  setOnModal(true)
+  setData(data)
+ }
   return (
     <>
     <form action="" className='text-center mt-5 mb-2 shadow-lg' onSubmit={handleSubmit}>
@@ -148,19 +161,21 @@ const ListItems = () => {
                 <div className="text-white">Not Tasks is Here...</div>
               ) : (
                 <>
+                {onModal?(<div onClick={()=>setOnModal(false)}><Modal data={data}/></div>):(<></>) }
                   {TaskDetails.taskData.data.map((data, index) => (
                     <div
                       key={index}
-                      className="bg-violet-950 flex items-center justify-center p-3 md:w-1/4 w-9/12 sm:w-1/2 mt-5"
+                      className=" bg-violet-950 shadow-xl transition-transform duration-500 ease-in-out transform hover:-translate-y-1 flex items-center justify-center p-3 md:w-1/4 w-9/12 sm:w-1/2 mt-5"
                     >
-                      <div className="w-11/12">
+                      <div className="w-11/12" onClick={()=>handlePopup(data)}>
                         <h3 className="text-2xl font-bold text-center text-white">
                           {data.title}
                         </h3>
                         <p className="text-sm m-3 scroll-m-2 text-white">
-                          {data.description}
+                          {data.description.length>=20?(<>{data.description.slice(0,20)}.......</>):(<>{data.description}</>)}
                         </p>
                       </div>
+          
                       <div className="w-1/12 m-1 text-white">
                         <a onClick={() => handleDelete(data._id)}>
                           <i className="fa-solid fa-trash"></i>
@@ -188,11 +203,13 @@ const ListItems = () => {
                         </div>
                         {Count &&
                           Count.map((data, index) => (
-                            <div key={index}>
+                            <div key={index}>{
+                              console.log(data,index)
+                            }
                               <div
                                 className={`bg-violet-950 p-2 border text-white cursor-pointer ${
-                                  parseInt(Page) === index + 1
-                                    ? "bg-violet-500 text-black font-semibold"
+                                  Page === index+1
+                                    ? "bg-white text-violet-950 font-semibold"
                                     : ""
                                 }`}
                                 onClick={() => handleNext(data)}
@@ -217,7 +234,7 @@ const ListItems = () => {
             </>
           ) : (
             <div className="w-full text-white flex items-center justify-center mt-12">
-              {<Loading />}
+            {error}
             </div>
           )}
         </div>

@@ -6,7 +6,7 @@ const errorMiddleware = require('./middleware/error');
 
 app.use(express.json());
 app.use(cors({
-    origin:"https://taksmanage.netlify.app",
+    origin:["https://taksmanage.netlify.app","http://localhost:5173"],
     credentials:true
 }));
 

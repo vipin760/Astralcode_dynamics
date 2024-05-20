@@ -31,7 +31,9 @@ const Create = () => {
         }
         setErrors(validationErrors)
         if(Object.keys(validationErrors).length===0){
-            dispatch(TaskCreate(FormData))
+            dispatch(TaskCreate(FormData)).then((data)=>{
+                window.location.href="/home"
+            })
         }
     }
   return (

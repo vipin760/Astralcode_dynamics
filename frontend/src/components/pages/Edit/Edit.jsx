@@ -47,7 +47,9 @@ const Edit = () => {
         }
         setErrors(validationErrors)
         if(Object.keys(validationErrors).length===0){
-            dispatch(SingleTaskUpdate(id,FormData))
+            dispatch(SingleTaskUpdate(id,FormData)).then((data)=>{
+                window.location.href="/home"
+            })
         }
     }
 

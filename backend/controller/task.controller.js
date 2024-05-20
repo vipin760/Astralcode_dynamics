@@ -21,12 +21,12 @@ exports.createTask = catchAsyncErrors( async (req,res,next)=>{
 exports.getTask = catchAsyncErrors( async(req,res,next)=>{
     let userData = await User.findById(req.user_id);
     const apiFeature =await ApiFeature(userData.tasks,req.query)
-    
-    if(apiFeature){
-       return res.status(200).send({data:apiFeature.taskData,countDocuments:apiFeature.countDocuments})
+    console.log("apiFeature",apiFeature)
+    console.log("apiFeature.length",apiFeature.length)
+    if(apiFeature.taskData.length<=0){
+       return next(new ErrorHandler('data not found',404));
     }
-    
-    
+    return res.status(200).send({data:apiFeature.taskData,countDocuments:apiFeature.countDocuments})
 })
  
 exports.singleTaskFetch = catchAsyncErrors( async(req,res,next)=>{
