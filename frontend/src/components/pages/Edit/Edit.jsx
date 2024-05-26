@@ -7,10 +7,11 @@ import { SingleTaskFetch, SingleTaskUpdate } from '../../../redux/tasks/task.act
 const Edit = () => {
     const {id} = useParams()
     const [FormData,setFormData]=useState({
-        title:'',description:'',category:'',status:''
+        title:'',description:'',category:'',status:'',date:''
     })
     const [Errors,setErrors]=useState({})
     const TaskDetails = useSelector(state=>state.TaskDetails)
+
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(SingleTaskFetch(id))
@@ -45,6 +46,9 @@ const Edit = () => {
         }else if(FormData.description.length<6){
             validationErrors.description="please enter atleast 6 character"
         }
+        if(!FormData.date.trim()){
+            validationErrors.date="please select date"
+        }
         setErrors(validationErrors)
         if(Object.keys(validationErrors).length===0){
             dispatch(SingleTaskUpdate(id,FormData)).then((data)=>{
@@ -67,6 +71,10 @@ const Edit = () => {
             {Errors.description&&(
                 <p>{Errors.description}</p>
             )}
+            <input type="date" name='date' value={FormData.date} className='m-1 rounded-lg text-center' placeholder='Enter Title...' onChange={handleChange} />
+                {Errors.date&&(
+                    <p>{Errors.date}</p>
+                )}
             <select name="category" id="" className='m-1 rounded-lg text-center' value={FormData.category} onChange={handleChange}>
                 <option value="work">work</option>
                 <option value="personel">personel</option>

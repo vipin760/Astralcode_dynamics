@@ -12,12 +12,12 @@ import {
   TASK_GET_FAIL,
   TASK_GET_REQUEST,
   TASK_GET_SUCCESS,
+  TASK_PRIORITY_FAIL,
   TASK_UPDATE_FAIL,
   TASK_UPDATE_REQUEST,
   TASK_UPDATE_SUCCESS,
 } from "./task.constants";
-const USER_API = "http://localhost:3000/api/v2";
-// const USER_API = "https://astralcode-dynamics.onrender.com/api/v2"
+import { USER_API } from "../../api";
 
 const getToken = () => {
   const token = localStorage.getItem("token");
@@ -55,18 +55,17 @@ export const TaskCreate = (formData) => async (dispatch) => {
   }
 };
 
-export const TaskGet = (qry,page,search) => async (dispatch) => {
+export const TaskGet = (qry,page,search,category) => async (dispatch) => {
   try {
-    console.log(qry,page)
+    console.log(qry,page,category)
     dispatch({ type: TASK_GET_REQUEST });
     const config = getToken();
     if(qry===undefined){
       qry= 'all'
     }
-    const { data } = await axios.get(`${USER_API}/task?status=${qry}&&page=${page}&&keyword=${search}`, config);
+    const { data } = await axios.get(`${USER_API}/task?status=${qry}&&page=${page}&&keyword=${search}&&category=${category}`, config);
     dispatch({ type: TASK_GET_SUCCESS, payload: data });
   } catch (error) {
-    toast.error(error.response.data.message);
     dispatch({
       type: TASK_GET_FAIL,
       payload:
@@ -111,13 +110,18 @@ export const DeleteTask =(id)=>async(dispatch)=>{
         dispatch({type:TASK_DELETE_REQUEST})
         const config = getToken();
         const { data } =await axios.delete(`${USER_API}/task/${id}`,config)
-        if(data.status){
-            toast.success(data.message)
-        }
         dispatch({type:TASK_DELETE_SUCCESS,taskData:data})
         
     } catch (error) {
         toast.error(error.response.data.message)
         dispatch({type:TASK_UPDATE_FAIL,payload:error.message&&error.response.data.message?error.response.data.message:error.message})
     }
+}
+
+export const TogglePriority=(id)=>async(dispatch)=>{
+  try {
+    const { data } = await axios.patch(`${USER_API}/task/${id}`)
+  } catch (error) {
+    dispatch({TASK_PRIORITY_FAIL, payload:error.message&&error.response.data.message?error.response.data.message:error.message})
+  }
 }

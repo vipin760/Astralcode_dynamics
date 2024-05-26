@@ -35,5 +35,5 @@ exports.userLogin=catchAsyncErrors( async(req,res,next)=>{
         return next(new ErrorHandler("incorrect email or password")) 
     }
     const token = generateToken(userData)
-    res.status(200).send({status:true,message:'user login success',token:token});
+    res.status(200).send({status:true,message:'user login success',token:token}); 
 })

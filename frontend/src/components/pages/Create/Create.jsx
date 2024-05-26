@@ -3,7 +3,7 @@ import  { useDispatch } from 'react-redux'
 import { TaskCreate } from '../../../redux/tasks/task.action'
 import axios from 'axios'
 const Create = () => {
-    const [FormData,setFormData] =useState({title:'',description:'',category:'',status:''})
+    const [FormData,setFormData] =useState({title:'',description:'',category:'',status:'',date:''})
     const [Errors,setErrors]=useState({})
     const dispatch = useDispatch()
     const handleChange=(e)=>{
@@ -23,7 +23,9 @@ const Create = () => {
         }else if(FormData.title.length<3){
             validationErrors.title ='please enter atleast 3 character'
         }
-
+        if(!FormData.date.trim()){
+            validationErrors.date="please select date"
+        }
         if(!FormData.description.trim()){
             validationErrors.description="please enter description"
         }else if(FormData.description.length<6){
@@ -31,8 +33,9 @@ const Create = () => {
         }
         setErrors(validationErrors)
         if(Object.keys(validationErrors).length===0){
+            console.log("formData",FormData)
             dispatch(TaskCreate(FormData)).then((data)=>{
-                window.location.href="/home"
+                // window.location.href="/home"
             })
         }
     }
@@ -48,6 +51,10 @@ const Create = () => {
                 <textarea type="text" name='description' className='m-1 rounded-lg text-center' placeholder='Description...' onChange={handleChange}/>
                 {Errors.description&&(
                     <p>{Errors.description}</p>
+                )}
+                <input type="date" name='date' className='m-1 rounded-lg text-center' placeholder='Enter Title...' onChange={handleChange} />
+                {Errors.date&&(
+                    <p>{Errors.date}</p>
                 )}
                 <select name="category" id="" className='m-1 rounded-lg text-center' onChange={handleChange}>
                     <option value="work">work</option>

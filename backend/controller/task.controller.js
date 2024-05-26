@@ -3,6 +3,7 @@ const Task = require("../model/task.model");
 const User = require("../model/user.model");
 const ApiFeature = require("../utils/apiFeature");
 const ErrorHandler = require('../utils/errorHandler')
+const mongoose = require('mongoose')
 
 exports.createTask = catchAsyncErrors( async (req,res,next)=>{
     await Task.create(req.body).then(async(data)=>{
@@ -19,10 +20,7 @@ exports.createTask = catchAsyncErrors( async (req,res,next)=>{
 })
 
 exports.getTask = catchAsyncErrors( async(req,res,next)=>{
-    let userData = await User.findById(req.user_id);
-    const apiFeature =await ApiFeature(userData.tasks,req.query)
-    console.log("apiFeature",apiFeature)
-    console.log("apiFeature.length",apiFeature.length)
+    const apiFeature =await ApiFeature(req.user_id,req.query)
     if(apiFeature.taskData.length<=0){
        return next(new ErrorHandler('data not found',404));
     }
@@ -47,4 +45,11 @@ exports.taskDeleted=catchAsyncErrors( async(req,res,next)=>{
     await Task.findByIdAndDelete(req.params.id).then(data=>{
         res.status(200).send({status:true,message:"task deleted successfully"});
     })
+})
+
+exports.togglePriority=catchAsyncErrors( async(req,res,next)=>{
+    const taskData =await Task.findById(req.params.id)
+    if(taskData){
+      const updateSuccess = await Task.findByIdAndUpdate(req.params.id,{priority:!taskData.priority})
+    }
 })
